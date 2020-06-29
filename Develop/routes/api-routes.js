@@ -15,10 +15,18 @@ router.get("/api/notes", async (req, res) => {
 router.post("/api/notes", async (req, res) => {
   let notesData = await readFileSync("./db/db.json");
   notesData = JSON.parse(notesData);
-  const { name, type, moves } = req.body;
-  pokemonData.pokemon.push({ name, id, type, moves });
-  await writeFileSync("data.json", JSON.stringify(pokemonData, null, 2));
-  res.json({ msg: "Pokemon added!" });
+  req.body.id = notesData.length + 1;
+  const { id, title, text } = req.body;
+  notesData.push({ id, title, text });
+  await writeFileSync("./db/db.json", JSON.stringify(notesData, null, 2));
+  res.json({ msg: "Notes added!" });
 });
+
+// router.delete("/api/notes/:id", (req, res) => {
+// let countData = await readFileSync("./db/db.json");
+// countData = JSON.parse(countData);
+//   const notesId = parseInt(req.body.id);
+//   res.send("Deleted notes!");
+// });
 
 module.exports = router;
