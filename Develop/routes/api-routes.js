@@ -22,11 +22,17 @@ router.post("/api/notes", async (req, res) => {
   res.json({ msg: "Notes added!" });
 });
 
-// router.delete("/api/notes/:id", (req, res) => {
-// let countData = await readFileSync("./db/db.json");
-// countData = JSON.parse(countData);
-//   const notesId = parseInt(req.body.id);
-//   res.send("Deleted notes!");
-// });
+router.delete("/api/notes/:id", async (req, res) => {
+  let notesData = await readFileSync("./db/db.json", "utf8");
+  notesData = JSON.parse(notesData);
+  const notesId = req.params.id;
+  notesData.forEach((value, index) => {
+    if (value.id == notesId) {
+      notesData.splice(index, 1);
+    }
+  });
+  await writeFileSync("./db/db.json", JSON.stringify(notesData, null, 2));
+  res.send("Deleted notes!");
+});
 
 module.exports = router;
